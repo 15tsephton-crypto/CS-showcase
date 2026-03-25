@@ -5,28 +5,32 @@ namespace Tax
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Enter your gross income: ");
+            Console.WriteLine("Enter your gross income:");
             double grossIncome = double.Parse(Console.ReadLine()!);
             Calc(grossIncome);
         }
         static void Calc(double grossIncome)
         {
+            double personalBasic = 12570; // The bound between the personal allowance and the basic rate.
+            double basicHigher = 50270; // The bound between the basic rate and the higher rate.
+            double higherAdditional = 125140; // The bound between the higher rate and the additional rate.
+            double personalReduction = 100000; // The point a which the personal allowance is reduced from.
             double tax = 0;
-            if (grossIncome > 12570 && grossIncome <= 50270)
+            if (grossIncome > personalBasic && grossIncome <= basicHigher)
             {
-                tax = (grossIncome - 12570) * 0.2;
+                tax = (grossIncome - personalBasic) * 0.2;
             }
-            else if (grossIncome > 50270 && grossIncome <= 100000)
+            else if (grossIncome > basicHigher && grossIncome <= personalReduction)
             {
-                tax = 7540 + ((grossIncome - 50270) * 0.4);
+                tax = ((basicHigher - personalBasic) * 0.2) + ((grossIncome - basicHigher) * 0.4);
             }
-            else if (grossIncome > 100000 && grossIncome <= 125140)
+            else if (grossIncome > personalReduction && grossIncome <= higherAdditional)
             {
-                tax = 7540 + ((grossIncome - 50270) * 0.4) + ((grossIncome - 100000) / 2);
+                tax = ((basicHigher - personalBasic) * 0.2) + ((grossIncome - basicHigher) * 0.4) + ((grossIncome - personalReduction) / 2);
             }
-            else if (grossIncome > 125140)
+            else if (grossIncome > higherAdditional)
             {
-                tax = 7540 + 29948 + 12570 + ((grossIncome - 125140) * 0.45);
+                tax = ((basicHigher - personalBasic) * 0.2) + ((higherAdditional - basicHigher) * 0.4) + ((higherAdditional - personalReduction) / 2) + ((grossIncome - higherAdditional) * 0.45);
             }
             double netIncome = grossIncome - tax;
             Console.WriteLine("Gross income: " + grossIncome);
